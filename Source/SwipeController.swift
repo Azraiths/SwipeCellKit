@@ -222,9 +222,13 @@ class SwipeController: NSObject {
         
         actionsContainerView.addSubview(actionsView)
         
-        actionsView.heightAnchor.constraint(equalTo: swipeable.heightAnchor).isActive = true
+        let constraint = actionsView.heightAnchor.constraint(equalToConstant: 70)
+		constraint.isActive = true
+		constraint.priority = UILayoutPriority.defaultHigh
+		
         actionsView.widthAnchor.constraint(equalTo: swipeable.widthAnchor, multiplier: 2).isActive = true
         actionsView.topAnchor.constraint(equalTo: swipeable.topAnchor).isActive = true
+		actionsView.bottomAnchor.constraint(lessThanOrEqualTo: swipeable.bottomAnchor).isActive = true
         
         if orientation == .left {
             actionsView.rightAnchor.constraint(equalTo: actionsContainerView.leftAnchor).isActive = true
