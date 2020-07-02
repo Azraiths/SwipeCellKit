@@ -22,10 +22,7 @@ class SwipeActionButton: UIButton {
     
     var alignmentRect: CGRect {
         let contentRect = self.contentRect(forBounds: bounds)
-        let titleHeight = titleBoundingRect(with: verticalAlignment == .centerFirstBaseline ? CGRect.infinite.size : contentRect.size).integral.height
-        let totalHeight = imageHeight + titleHeight + currentSpacing
-
-        return contentRect.center(size: CGSize(width: contentRect.width, height: totalHeight))
+        return contentRect
     }
     
     private var imageHeight: CGFloat {
@@ -33,15 +30,13 @@ class SwipeActionButton: UIButton {
             return currentImage == nil ? 0 : maximumImageHeight
         }
     }
-    
-    override var intrinsicContentSize: CGSize {
-        return CGSize(width: UIView.noIntrinsicMetric, height: contentEdgeInsets.top + alignmentRect.height + contentEdgeInsets.bottom)
-    }
-    
+	
     convenience init(action: SwipeAction) {
         self.init(frame: .zero)
 
         contentHorizontalAlignment = .center
+		contentVerticalAlignment = .bottom
+		contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 6, right: 0)
         
         tintColor = action.textColor ?? .white
         let highlightedTextColor = action.highlightedTextColor ?? tintColor
@@ -54,6 +49,7 @@ class SwipeActionButton: UIButton {
         
         accessibilityLabel = action.accessibilityLabel
         
+		setBackgroundImage(action.backgroundImage, for: .normal)
         setTitle(action.title, for: .normal)
         setTitleColor(tintColor, for: .normal)
         setTitleColor(highlightedTextColor, for: .highlighted)
@@ -84,12 +80,6 @@ class SwipeActionButton: UIButton {
                                   options: [.usesLineFragmentOrigin],
                                   attributes: [NSAttributedString.Key.font: font],
                                   context: nil).integral
-    }
-    
-    override func titleRect(forContentRect contentRect: CGRect) -> CGRect {
-        var rect = contentRect.center(size: titleBoundingRect(with: contentRect.size).size)
-        rect.origin.y = alignmentRect.minY + imageHeight + currentSpacing
-        return rect.integral
     }
     
     override func imageRect(forContentRect contentRect: CGRect) -> CGRect {
